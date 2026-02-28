@@ -31,9 +31,9 @@ try:
                 
                 if len(data_buffer) > buffer_size:
                     data_buffer.pop(0)
-                    
-                smoothed_distance = sum(data_buffer) / len(data_buffer)
-                print(f"Smoothed distance: {smoothed_distance:.2f} cm")
+                sorted_buffer = sorted(data_buffer)
+                median_distance = sorted_buffer[len(sorted_buffer) // 2]   
+                print(f"Smoothed distance: {median_distance:.2f} cm")
 
             except ValueError:
                 pass # Ignores data that cannot be converted to float
@@ -48,3 +48,11 @@ finally:
     if 'arduino' in locals() and arduino.is_open:
         arduino.close()
         print("Serial port safely closed.")
+              
+
+
+            #
+              
+
+              
+    
