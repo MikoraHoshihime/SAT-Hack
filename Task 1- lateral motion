@@ -44,7 +44,18 @@ void loop() {
       Serial.print(median_distance);
       Serial.println(" cm");
       // Navigation code below for lateral motion
-
+      recentLeftTurn = false
+      // Move forward function (simple timed motion)
+      void moveForward(int speed, unsigned long duration) {
+        motor1(speed, 0);
+        motor2(speed, 0);
+        delay(duration);
+        motor1(0, 0);
+        motor2(0, 0); 
+}
+      if(median_distance<50)
+          if(!recentLeftTurn)
+            
     }
   }
   
