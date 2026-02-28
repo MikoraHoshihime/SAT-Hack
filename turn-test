@@ -1,0 +1,19 @@
+void setup() {
+  Serial.begin(9600);
+
+  delay(2000); // time to place robot aligned north
+
+  unsigned long startTime = millis();
+
+  motor1(150,0);
+  motor2(0,150);
+
+  delay(2000);  // rotate for 2 seconds
+
+  motor1(0,0);
+  motor2(0,0);
+
+  Serial.println("Rotation complete");
+}
+
+void loop() {}
