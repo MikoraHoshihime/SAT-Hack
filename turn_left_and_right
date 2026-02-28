@@ -3,6 +3,15 @@
 float heading = 0.0; //defining initial position upright as north
 
 float turn(float angle) {
+    int kickstep_speed = 255; 
+    if(angle > 0) {
+        motor1(kickstep_speed, 0); 
+        motor2(0, kickstep_speed);
+    } else {
+        motor1(0, kickstep_speed);
+        motor2(kickstep_speed, 0);
+    }
+    delay(100);
     // Motor logic
     if(angle > 0) {  // right
         motor1(TURN_SPEED, 0);
