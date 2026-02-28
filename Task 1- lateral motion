@@ -1,1 +1,2 @@
-//
+// import get distance function, incorporate if distance < 50cm then turn right 90 degrees and move forward and turn left 90 degrees
+// repeat logic but turn left instead and turn right again (so we stay in the box)
