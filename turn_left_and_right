@@ -1,0 +1,52 @@
+#define TURN_SPEED = 150
+#define ANG_VEL = 235 // degrees per second
+
+void turnRight30() {
+
+  float angle = 30.0;
+
+  // Calculate required time
+  float timeSeconds = angle / ANGULAR_VELOCITY;
+  unsigned long duration = timeSeconds * 1000;
+
+  // Rotate right 30
+  motor1(TURN_SPEED,0);
+  motor2(0,TURN_SPEED);
+
+  delay(duration);
+
+  // Stop motors
+  motor1(0,0);
+  motor2(0,0);
+
+  // Update heading (clockwise increases)
+  heading += angle;
+  if (heading >= 360.0) {
+    heading -= 360.0;
+  }
+}
+
+void turnLeft30() {
+
+  float angle = 30.0;
+
+  // Calculate required time
+  float timeSeconds = angle / ANGULAR_VELOCITY;
+  unsigned long duration = timeSeconds * 1000;
+
+  // Rotate left
+  motor1(TURN_SPEED,0);
+  motor2(0,TURN_SPEED);
+
+  delay(duration);
+
+  // Stop motors
+  motor1(0,0);
+  motor2(0,0);
+
+  // Update heading (clockwise increases)
+  heading -= angle;
+  if (heading >= 360.0) {
+    heading += 360.0;
+  }
+}
