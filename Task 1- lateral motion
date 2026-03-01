@@ -1,8 +1,10 @@
-// import get distance function, incorporate if distance < 50cm then turn right 90 degrees and move forward and turn left 90 degrees
-// repeat logic but turn left instead and turn right again (so we stay in the box)
-
 const int trigPin = A4; 
 const int echoPin = A5;
+#include "background-defining-functions.h"
+#include "turn_left_and_right.h"
+// State variable to track recent lateral motion
+bool recentLeftTurn = false;
+#define TURN_SPEED 150 //speed of motors
 
 // Set up the buffer size (equivalent to your buffer_size = 10)
 const int BUFFER_SIZE = 10;
@@ -19,6 +21,22 @@ void setup() {
   delay(1000); // Equivalent to time.sleep(2)
 }
 
+// Move forward function (simple timed motion)
+void moveForward(int speed, unsigned long duration) {
+    motor1(0, speed);
+    motor2(0, speed);
+    delay(duration);
+    motor1(0, 0);
+    motor2(0, 0);
+}
+// Move backwards function (simple timed motion)
+void moveBackward(int speed, unsigned long duration) {
+    motor1(speed,0);
+    motor2(speed,0);
+    delay(duration);
+    motor1(0, 0);
+    motor2(0, 0);
+}
 void loop() {
   // 1. Get raw distance directly from the sensor (Replaces reading the COM port)
   float distance = getUltrasonicDistance();
@@ -36,30 +54,41 @@ void loop() {
 
     // 3. Calculate the median once the buffer has data
     int current_size = buffer_full ? BUFFER_SIZE : buffer_index;
-    
-    if (current_size > 0) {
+      if (current_size > 0) {
       float median_distance = calculateMedian(data_buffer, current_size);
       
       Serial.print("Smoothed distance: ");
       Serial.print(median_distance);
       Serial.println(" cm");
       // Navigation code below for lateral motion
-      recentLeftTurn = false
-      // Move forward function (simple timed motion)
-      void moveForward(int speed, unsigned long duration) {
-        motor1(speed, 0);
-        motor2(speed, 0);
-        delay(duration);
-        motor1(0, 0);
-        motor2(0, 0); 
-}
-      if(median_distance<50)
-          if(!recentLeftTurn)
-            
+
+      if(median_distance < 75) { // obstacle detected
+          if(!recentLeftTurn) {
+              // First lateral avoidance: turn right, move forward, then left
+             // turn(65);                 // turn right
+              //delay(500);
+              moveForward(255, 250); // move forward some distance
+              moveForward(200, 750);
+              delay(1000);
+             // turn(-65);                // turn left to align
+              recentLeftTurn = true;    // mark that we recently turned left
+          } else {
+              // Already recently turned left: avoid the next obstacle differently
+             // turn(-65);                // turn left
+             // delay(500);
+              moveBackward(255, 250); // move forward
+              moveBackward(200, 750);
+              delay(1000);
+            //  turn(65);                 // realign to original heading
+              recentLeftTurn = false;   // reset
+          }
+          buffer_index = 0;
+          buffer_full = false;
+      }
     }
   }
   
-  delay(50); // Small delay to prevent ultrasonic echo interference 
+  delay(10); // Small delay to prevent ultrasonic echo interference 
 }
 
 // --- HELPER FUNCTIONS ---
